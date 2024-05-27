@@ -16,10 +16,12 @@ class BranchPermission
     public function handle(Request $request, Closure $next): Response
     {
         if (!empty($request->user())) {
-            // `getTeamIdFromToken()` example of custom method for getting the set team_id 
-            setPermissionsTeamId(auth('api')->user()->getTeamIdFromToken());
-            echo "asd2";
-            exit;
+            // Check for branches
+            $branches = $request->user()->branches;
+
+            if (!empty($branches->toArray())) {
+                setPermissionsTeamId($request->user()->branches[0]);
+            }
         }
 
         return $next($request);

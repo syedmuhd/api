@@ -5,23 +5,19 @@ namespace App\Http\Controllers\Auth;
 use App\Helpers\RoleHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
-use App\Models\Headquarter;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 
 /**
- * Register Staff, Parent, Student
+ * Register Staff
  */
 
 class RegisterStaffController extends Controller
 {
     public function __invoke(Request $request)
     {
-        return "asd";
-
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email',
@@ -31,37 +27,23 @@ class RegisterStaffController extends Controller
 
         DB::transaction(function () use ($validated) {
 
-            // Create admin
-            $admin = User::create($validated);
+            // Create staff
+            $staff = User::create($validated);
 
-            // Error creating admin
-            abort_if(!$admin, Response::HTTP_BAD_REQUEST, 'Operation failed - Create Admin');
+            // Error creating staff
+            abort_if(!$staff, Response::HTTP_BAD_REQUEST, 'Operation failed - Create Staff');
 
-            $hq = Headquarter::find($validated['hq_id']);
-            abort_if(!$hq, Response::HTTP_BAD_REQUEST, 'Operation failed - Find HQ');
-
-            // Create branch (known as "team" from role perspective)
-            $branch = Branch::create([
-                'headquarter_id' => $hq->id,
-                'name' => $validated['branch_name']
-            ]);
-
-            abort_if(!$hq, Response::HTTP_BAD_REQUEST, 'Operation failed - Create Branch');
-
-            // Create Role Admin for the Branch
-            Role::create(['name' => RoleHelper::ROLE_ADMIN, 'team_id' => $branch->id]);
+            $branch = Branch::find($validated['branch_id']);
+            abort_if(!$branch, Response::HTTP_BAD_REQUEST, 'Operation failed - Find Branch');
 
             // Set current branch for role assigning
             setPermissionsTeamId($branch->id);
 
             // Assign admin role with branch
-            $admin->assignRole(RoleHelper::ROLE_ADMIN);
+            $staff->assignRole(RoleHelper::ROLE_STAFF);
 
-            // Assign Branch to HQ
-            $branch->headquarter()->associate($hq);
-
-            // Assign Admin to Branch
-            $admin->branches()->attach($branch);
+            // Assign Staff to Branch
+            $staff->branches()->attach($branch);
         });
 
         return response()->json(['message' => true], Response::HTTP_OK);

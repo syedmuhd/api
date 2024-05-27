@@ -53,9 +53,6 @@ class RegisterController extends Controller
 
             abort_if(!$hq, Response::HTTP_BAD_REQUEST, 'Operation failed - Create Branch');
 
-            // Create Role Admin for the Branch
-            Role::create(['name' => RoleHelper::ROLE_ADMIN, 'team_id' => $branch->id]);
-
             // Set current branch for role assigning
             setPermissionsTeamId($branch->id);
 

@@ -62,4 +62,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Branch::class);
     }
+
+    /**
+     * If user role is Parent
+     * Parent can have many students
+     */
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'parent_student', 'parent_id', 'student_id', 'id', 'id');
+    }
 }

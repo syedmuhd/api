@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterParentController;
 use App\Http\Controllers\Auth\RegisterStaffController;
+use App\Http\Controllers\Auth\RegisterStudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,10 +25,19 @@ Route::prefix('auth')->group(function () {
 
     // Registration
     Route::prefix('register')->group(function () {
-        Route::middleware(['auth:sanctum', 'ability:register-user'])->group(function () {
+        // Only Admin can register staff
+        Route::middleware(['auth:sanctum', 'ability:Admin'])->group(function () {
             Route::post('staff', RegisterStaffController::class);
-            Route::post('parent', RegisterStaffController::class);
-            Route::post('student', RegisterStaffController::class);
+        });
+
+        // Only Admin|Staff can register parent and/or student
+        Route::middleware(['auth:sanctum', 'ability:Admin,Staff'])->group(function () {
+            Route::post('parent', RegisterParentController::class);
+        });
+
+        // Only Admin|Staff|Parent can register parent and/or student
+        Route::middleware(['auth:sanctum', 'ability:Admin,Staff,Parent'])->group(function () {
+            Route::post('student', RegisterStudentController::class);
         });
     });
 });
