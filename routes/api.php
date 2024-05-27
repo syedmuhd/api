@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterStaffController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('auth')->group(function () {
+
+    // Login for Admin, Staff, Parent, Student
+    Route::post('login', LoginController::class);
+
+    // Registration
+    Route::prefix('register')->group(function () {
+        Route::middleware(['auth:sanctum', 'ability:register-user'])->group(function () {
+            Route::post('staff', RegisterStaffController::class);
+            Route::post('parent', RegisterStaffController::class);
+            Route::post('student', RegisterStaffController::class);
+        });
+    });
 });

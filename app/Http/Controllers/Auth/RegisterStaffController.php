@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Super\Auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Helpers\RoleHelper;
 use App\Http\Controllers\Controller;
@@ -13,25 +13,20 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 /**
- * Register Admin
- * Only Super can execute this
+ * Register Staff, Parent, Student
  */
 
-class RegisterController extends Controller
+class RegisterStaffController extends Controller
 {
     public function __invoke(Request $request)
     {
-        /**
-         * Super is allowed
-         */
-        abort_if(!$request->user()->is_super, Response::HTTP_BAD_REQUEST, 'Operation is not permitted');
+        return "asd";
 
         $validated = $request->validate([
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8',
-            'hq_id' => 'required|integer',
-            'branch_name' => 'required|string'
+            'branch_id' => 'required|integer',
         ]);
 
         DB::transaction(function () use ($validated) {

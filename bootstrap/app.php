@@ -41,6 +41,13 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+// Register Sanctum's token ability middleware aliases
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+
+$app->router->aliasMiddleware('abilities', CheckAbilities::class);
+$app->router->aliasMiddleware('ability', CheckForAnyAbility::class);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
