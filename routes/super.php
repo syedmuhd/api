@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Super\Auth\LoginController;
 use App\Http\Controllers\Super\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,5 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')->group(function () {
-    Route::post('register', RegisterController::class);
+
+    /**
+     * Login for super
+     */
+    Route::post('login', LoginController::class);
+})->group(function () {
+    Route::middleware(['auth:sanctum'])->group(function () {
+        /**
+         * Register admin (branch owner)
+         */
+        Route::post('register', RegisterController::class);
+    });
 });
