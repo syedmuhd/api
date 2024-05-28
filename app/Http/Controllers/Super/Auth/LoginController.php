@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Super\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Authentication
@@ -25,6 +26,10 @@ class LoginController extends Controller
             'is_super' => 1
         ])->first();
 
-        return $super->createToken('token-super', ['*'])->plainTextToken;
+        // Notify by email login succeed
+
+        $token = $super->createToken('token-super', ['*'])->plainTextToken;
+
+        return response()->json(['token' => $token], Response::HTTP_OK);
     }
 }

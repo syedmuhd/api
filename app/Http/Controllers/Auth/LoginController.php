@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Authentication
@@ -19,14 +20,36 @@ class LoginController extends Controller
     public function __invoke(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|email',
+            'emailOrPhone' => 'required',
             'password' => 'required|min:8'
         ]);
 
-        $user = User::where([
-            'email' => $validated['email'],
-            'is_super' => 0
-        ])->first();
+        $user = null;
+
+        $emailValidator = Validator::make(['email' => $validated['emailOrPhone']], [
+            'email' => 'email:rfc,dns',
+        ]);
+
+        $phoneValidator = Validator::make(['phone' => $validated['emailOrPhone']], [
+            'phone' => 'numeric|phone:MY'
+        ]);
+
+        // Get user by email
+        if ($emailValidator->valid()) {
+            $user = User::where([
+                'email' => $emailValidator->valid()['email'],
+                'is_super' => 0
+            ])->first();
+        } else if ($phoneValidator->valid()) {
+            // Get user by phone
+            $user = User::where([
+                'phone' => $phoneValidator->valid()['phone'],
+                'is_super' => 0
+            ])->first();
+        } else {
+            // Invalid
+            abort(Response::HTTP_CONFLICT, "Invalid phone or email");
+        }
 
         // Not found
         abort_if(!$user, Response::HTTP_UNAUTHORIZED, 'Invalid credentials');
@@ -53,6 +76,6 @@ class LoginController extends Controller
             $token = $user->createToken('token-student', [RoleHelper::ROLE_STUDENT])->plainTextToken;
         }
 
-        return $token;
+        return response()->json(['token' => $token], Response::HTTP_OK);
     }
 }

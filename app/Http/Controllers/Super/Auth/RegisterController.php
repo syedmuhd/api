@@ -27,6 +27,7 @@ class RegisterController extends Controller
         abort_if(!$request->user()->is_super, Response::HTTP_BAD_REQUEST, 'Operation is not permitted');
 
         $validated = $request->validate([
+            'phone' => 'required|integer',
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:8',

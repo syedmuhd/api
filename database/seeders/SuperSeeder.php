@@ -15,6 +15,7 @@ class SuperSeeder extends Seeder
     public function run(): void
     {
         $super = [
+            'phone' => '60162731882',
             'name' => 'Software Hub',
             'email' => 'super@softwarehub.my',
             'password' => Hash::make('password'),
