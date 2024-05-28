@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterParentController;
 use App\Http\Controllers\Auth\RegisterStaffController;
 use App\Http\Controllers\Auth\RegisterStudentController;
+use App\Http\Controllers\MeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,4 +41,13 @@ Route::prefix('auth')->group(function () {
             Route::post('student', RegisterStudentController::class);
         });
     });
+});
+
+/**
+ * Authenticated routes
+ */
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    // Me
+    Route::get('me', MeController::class);
 });
