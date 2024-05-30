@@ -17,9 +17,8 @@ class SuperSeeder extends Seeder
         $super = [
             'phone' => '60162731882',
             'name' => 'Software Hub',
-            'email' => 'super@softwarehub.my',
+            'email' => 'admin@softwarehub.my',
             'password' => Hash::make('password'),
-            'is_super' => 1
         ];
 
         User::create($super);

@@ -4,8 +4,12 @@ extend type Query {
     me: User @auth
 }
 
+extend type Mutation {
+    createStaff(name: String!, email: String!): User @create @canModel(ability: "createStaff")
+}
+
 type User {
-    id: ID!
+    id: Int!
     name: String!
     email: String!
     email_verified_at: DateTime

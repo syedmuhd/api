@@ -18,6 +18,8 @@ class BranchPermission
         if (!empty($request->user())) {
             // Check for branches
             $branches = $request->user()->branches;
+            return "hello";
+
 
             if (!empty($branches->toArray())) {
                 setPermissionsTeamId($request->user()->branches[0]);
