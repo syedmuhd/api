@@ -11,37 +11,11 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-class UserController extends Controller
+class LoginController extends Controller
 {
     use ResponseHelper;
 
-    /**
-     * Register User
-     * Entity: Staff, Parent, Student
-     */
-    public function register(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|alpha',
-            'email' => 'required_without:phone|email:rfc,dns',
-            'phone' => 'required_without:email|numeric|phone:MY',
-            'password' => 'required|min:8',
-        ]);
-
-        $user = UserService::createUser($validated);
-
-        if ($user) {
-            return response()->json(['message' => 'success'], Response::HTTP_OK);
-        } else {
-            return response()->json(['message' => 'error'], Response::HTTP_CONFLICT);
-        }
-    }
-
-    /**
-     * Login User
-     */
-
-    public function login(Request $request)
+    public function __invoke(Request $request)
     {
         $validated = $request->validate([
             'emailOrPhone' => 'required',
@@ -59,13 +33,9 @@ class UserController extends Controller
         ]);
 
         if ($emailValidator->valid()) {
-            $user = User::where([
-                'email' => $emailValidator->valid()['email'],
-            ])->first();
+            $user = User::where(['email' => $emailValidator->valid()['email']])->first();
         } else if ($phoneValidator->valid()) {
-            $user = User::where([
-                'phone' => $phoneValidator->valid()['phone'],
-            ])->first();
+            $user = User::where(['phone' => $phoneValidator->valid()['phone']])->first();
         } else {
             return response()->json(['Invalid phone or email'], Response::HTTP_CONFLICT);
         }
@@ -80,9 +50,13 @@ class UserController extends Controller
 
         $token = $user->createToken('token')->plainTextToken;
 
+        setPermissionsTeamId($user->team_id);
+
+        $user->updateLastLogin();
+
         return $this->responseOk([
             'accessToken' => $token,
-            'userData' => $user->toArray() + ['role' => 'admin'],
+            'userData' => $user->toArray() + ['role' => $user->getRoleNames()[0]],
             'userAbilityRules' => [
                 ["action" => "manage", "subject" => "all"],
             ]

@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class BranchPermission
+class SetTeamId
 {
     /**
      * Handle an incoming request.
@@ -17,12 +17,10 @@ class BranchPermission
     {
         if (!empty($request->user())) {
             // Check for branches
-            $branches = $request->user()->branches;
-            return "hello";
+            $teamId = $request->user()->team_id;
 
-
-            if (!empty($branches->toArray())) {
-                setPermissionsTeamId($request->user()->branches[0]);
+            if ($teamId) {
+                setPermissionsTeamId($teamId);
             }
         }
 

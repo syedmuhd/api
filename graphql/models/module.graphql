@@ -1,0 +1,14 @@
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+extend type Query {
+    modules: [Module] @all @guard
+}
+
+type Module {
+    id: Int!
+    name: String!
+    is_active: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

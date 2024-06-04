@@ -4,7 +4,7 @@ extend type Query {
     me: User @auth
 }
 
-extend type Mutation {
+type Mutation {
     createStaff(name: String!, email: String!): User @create @canModel(ability: "createStaff")
 }
 

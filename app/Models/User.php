@@ -18,6 +18,12 @@ class User extends Authenticatable
     use Notifiable;
     use HasRoles;
 
+    // Spatie role
+    protected function getDefaultGuardName(): string
+    {
+        return 'api';
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +34,8 @@ class User extends Authenticatable
         'email',
         'name',
         'password',
+        'team_id',
+        'last_login'
     ];
 
     /**
@@ -51,8 +59,21 @@ class User extends Authenticatable
     ];
 
     /**
+     * Functions
+     */
+    public function updateLastLogin()
+    {
+        $this->update(['last_login' => now()]);
+    }
+
+    /**
      * Relationships
      */
+
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class);
+    }
 
     /**
      * If user role is [Admin, Staff, Parent, Student]
