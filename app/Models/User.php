@@ -18,12 +18,6 @@ class User extends Authenticatable
     use Notifiable;
     use HasRoles;
 
-    // Spatie role
-    protected function getDefaultGuardName(): string
-    {
-        return 'api';
-    }
-
     /**
      * The attributes that are mass assignable.
      *

@@ -23,6 +23,7 @@ class SuperAdministratorSeeder extends Seeder
         // Create super admin role
         Role::create([
             'name' => 'Super Administrator',
+            'guard_name' => 'web',
             'team_id' => $team->id
         ]);
 
