@@ -13,8 +13,7 @@
         "laravel/tinker": "^2.8",
         "mll-lab/laravel-graphiql": "^3.2",
         "nuwave/lighthouse": "^6.36",
-        "propaganistas/laravel-phone": "^5.3",
-        "spatie/laravel-permission": "^6.7"
+        "propaganistas/laravel-phone": "^5.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

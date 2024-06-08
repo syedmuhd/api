@@ -2,13 +2,16 @@ scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 extend type Query @guard {
-    modules: [Module] @all
+    roles: [Role] @all
 }
 
-type Module {
+type Role {
     id: Int!
     name: String!
-    is_active: String!
     created_at: DateTime!
     updated_at: DateTime!
+
+    # Relationships
+    users: [User] @belongsToMany
+    permissions: [Permission] @belongsToMany
 }

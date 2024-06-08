@@ -3,20 +3,27 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Listeners\UserCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
+
+use function Illuminate\Events\queueable;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
-    use HasRoles;
+
+    const TABLE_RELATIONSHIP_USER_ROLE = 'user_role';
+    const TABLE_RELATIONSHIP_USER_PERMISSIONS = 'user_permission';
+    const TABLE_RELATIONSHIP_USER_BRANCH = 'user_branch';
 
     /**
      * The attributes that are mass assignable.
@@ -60,13 +67,30 @@ class User extends Authenticatable
         $this->update(['last_login' => now()]);
     }
 
+    public function isSuperAdministrator(): bool
+    {
+        return in_array(Role::ROLE_SUPER_ADMINISTRATOR, $this->roles->pluck('name')->toArray());
+    }
+
+    /**
+     * Events
+     */
+    protected static function booted(): void
+    {
+        static::created(queueable(function (User $user) {
+            // Create user profile
+            $user->profile()->save(new Profile());
+        }));
+    }
+
     /**
      * Relationships
      */
 
-    public function teams(): BelongsToMany
+    // Profile
+    public function profile(): HasOne
     {
-        return $this->belongsToMany(Team::class);
+        return $this->hasOne(Profile::class);
     }
 
     /**
@@ -75,7 +99,7 @@ class User extends Authenticatable
      */
     public function branches(): BelongsToMany
     {
-        return $this->belongsToMany(Branch::class);
+        return $this->belongsToMany(Branch::class, self::TABLE_RELATIONSHIP_USER_BRANCH);
     }
 
     /**
@@ -85,5 +109,21 @@ class User extends Authenticatable
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'parent_student', 'parent_id', 'student_id', 'id', 'id');
+    }
+
+    /**
+     * Has Many Roles
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, self::TABLE_RELATIONSHIP_USER_ROLE);
+    }
+
+    /**
+     * Has Many Permissions
+     */
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(Permission::class, self::TABLE_RELATIONSHIP_USER_PERMISSIONS);
     }
 }

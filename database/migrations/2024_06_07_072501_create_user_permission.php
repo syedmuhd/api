@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Team;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_user', function (Blueprint $table) {
-            $table->foreignIdFor(Team::class);
+        Schema::create('user_permission', function (Blueprint $table) {
             $table->foreignIdFor(User::class);
+            $table->foreignIdFor(Permission::class);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_user');
+        Schema::dropIfExists('user_permission');
     }
 };

@@ -1,20 +1,17 @@
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 extend type Query @guard {
-    me: User @auth
+    branches: [Branch] @all @canModel(ability: "isSuperAdministrator")
 }
 
-type User {
+type Branch {
     id: Int!
-    email: String!
-    email_verified_at: DateTime
+    name: String!
+    is_active: Int!
     created_at: DateTime!
     updated_at: DateTime!
 
     # Relationships
-    profile: Profile!
-    branches: [Branch]
-    students: [User]
+    users: [User]
     roles: [Role]
-    permissions: [Permission]
 }

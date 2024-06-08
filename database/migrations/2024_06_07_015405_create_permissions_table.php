@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_branch', function (Blueprint $table) {
-            $table->foreignId('branch_id')->index();
-            $table->foreignId('user_id')->index();
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_branch');
+        Schema::dropIfExists('permissions');
     }
 };

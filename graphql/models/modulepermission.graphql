@@ -2,10 +2,10 @@ scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 extend type Query @guard {
-    modules: [Module] @all
+    modulepermissions: [Modulepermission] @all
 }
 
-type Module {
+type Modulepermission {
     id: Int!
     name: String!
     is_active: String!

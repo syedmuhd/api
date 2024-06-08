@@ -17,46 +17,38 @@ class LoginController extends Controller
 
     public function __invoke(Request $request)
     {
-        $validated = $request->validate([
-            'emailOrPhone' => 'required',
+        $data = $request->validate([
+            'email' => 'required_without:phone',
+            'phone' => 'required_without:email',
             'password' => 'required|min:8'
         ]);
 
         $user = null;
 
-        $emailValidator = Validator::make(['email' => $validated['emailOrPhone']], [
-            'email' => 'email:rfc,dns',
-        ]);
-
-        $phoneValidator = Validator::make(['phone' => $validated['emailOrPhone']], [
-            'phone' => 'numeric|phone:MY'
-        ]);
-
-        if ($emailValidator->valid()) {
-            $user = User::where(['email' => $emailValidator->valid()['email']])->first();
-        } else if ($phoneValidator->valid()) {
-            $user = User::where(['phone' => $phoneValidator->valid()['phone']])->first();
+        // Auth by email
+        if (isset($data['email'])) {
+            $user = User::where(['email' => $data['email']])->first();
+        } else if (isset($data['phone'])) {
+            $user = User::where(['phone' => $data['phone']])->first();
         } else {
-            return response()->json(['Invalid phone or email'], Response::HTTP_CONFLICT);
+            response()->json(['errors' => ['message' => 'Unknown error']], Response::HTTP_CONFLICT);
         }
 
         if (!$user) {
             return response()->json(['Invalid credentails'], Response::HTTP_CONFLICT);
         }
 
-        if (!Hash::check($validated['password'], $user['password'])) {
+        if (!Hash::check($data['password'], $user['password'])) {
             return response()->json(['Invalid credentails'], Response::HTTP_CONFLICT);
         }
 
         $token = $user->createToken('token')->plainTextToken;
 
-        setPermissionsTeamId($user->team_id);
-
         $user->updateLastLogin();
 
         return $this->responseOk([
             'accessToken' => $token,
-            'userData' => $user->toArray() + ['role' => $user->getRoleNames()[0]],
+            'userData' => $user->toArray() + ['role' => $user->roles->pluck('name')],
             'userAbilityRules' => [
                 ["action" => "manage", "subject" => "all"],
             ]

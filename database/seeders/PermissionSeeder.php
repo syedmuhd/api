@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Modulepermission;
+use App\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,16 +14,15 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $modulePermissions = [
+        $permissions = [
             "View",
-            "Read",
-            "Write",
+            "Edit",
             "Create",
             "Delete"
         ];
 
-        foreach ($modulePermissions as $modulePermission) {
-            Modulepermission::create(['name' => $modulePermission]);
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
         }
     }
 }

@@ -15,11 +15,9 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('phone')->nullable();
-            $table->string('name');
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->foreignIdFor(Team::class)->comment("current active team id. user can have many teams, but only 1 active at one time");
             $table->rememberToken();
             $table->timestamp('last_login')->nullable();
             $table->timestamps();

@@ -1,3 +1,4 @@
 #import models/*.graphql
 
 type Query
+# type Mutation

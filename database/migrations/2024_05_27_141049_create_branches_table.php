@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('headquarter_id');
+            $table->foreignId('headquarter_id')->index();
             $table->string('name');
             $table->tinyInteger('is_active')->default(1);
             $table->timestamps();

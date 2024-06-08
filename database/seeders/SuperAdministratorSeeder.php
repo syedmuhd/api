@@ -2,12 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
+use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class SuperAdministratorSeeder extends Seeder
 {
@@ -16,38 +17,29 @@ class SuperAdministratorSeeder extends Seeder
      */
     public function run(): void
     {
-
-        // Create super admin team
-        $team = Team::create(['name' => 'Software Hub Sdn. Bhd.']);
-
-        // Create super admin role
-        Role::create([
-            'name' => 'Super Administrator',
-            'guard_name' => 'web',
-            'team_id' => $team->id
-        ]);
-
         $super = [
             'phone' => '60162731882',
-            'name' => 'Software Hub',
             'email' => 'admin@softwarehub.my',
             'password' => Hash::make('password'),
-            'team_id' => $team->id
         ];
 
         // Create super admin user
         $user = User::create($super);
 
-        // Set team id
-        setPermissionsTeamId($team->id);
+        $superAdministratorRole = Role::firstWhere([
+            'name' => Role::ROLE_SUPER_ADMINISTRATOR
+        ]);
 
-        // Add into team
-        $team->users()->attach($user);
+        // Assign role super admin
+        $user->roles()->attach($superAdministratorRole);
 
-        // Assign role
-        $user->assignRole('Super Administrator');
+        $branch = Branch::find(1);
 
-        // Unset team id
-        setPermissionsTeamId(null);
+        // Assign branch software hub sdn bhd, shah alam
+        $user->branches()->attach($branch);
+
+        $roles = Role::find([1, 2, 3, 4, 5]);
+
+        $branch->roles()->attach($roles);
     }
 }

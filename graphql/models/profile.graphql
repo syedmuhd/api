@@ -1,14 +1,10 @@
 scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
-extend type Query @guard {
-    modules: [Module] @all
-}
 
-type Module {
+type Profile {
     id: Int!
-    name: String!
-    is_active: String!
+    name: String
     created_at: DateTime!
     updated_at: DateTime!
 }
