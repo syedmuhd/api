@@ -12,7 +12,8 @@ type User {
     updated_at: DateTime!
 
     # Relationships
-    profile: Profile!
+    profile: Profile
+    headquarter: Headquarter
     branches: [Branch]
     students: [User]
     roles: [Role]

@@ -4,6 +4,10 @@ extend type Query @guard {
     branches: [Branch] @all @canModel(ability: "isSuperAdministrator")
 }
 
+extend type Mutation @guard {
+  createBranch(headquarter_id: Int!, name: String!): Branch! @create @canModel(ability: "isSuperAdministrator")
+}
+
 type Branch {
     id: Int!
     name: String!

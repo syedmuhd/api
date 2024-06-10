@@ -2,30 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Branch;
+use App\Models\Permission;
 use App\Models\User;
-use App\Traits\AuthorizationHelper;
 use Illuminate\Auth\Access\Response;
 
-class BranchPolicy
+class PermissionPolicy
 {
-
-    use AuthorizationHelper;
-
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        //
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Branch $branch): bool
+    public function view(User $user, Permission $permission): bool
     {
-        return true;
+        //
     }
 
     /**
@@ -33,13 +29,13 @@ class BranchPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isSuperAdministrator();
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Branch $branch): bool
+    public function update(User $user, Permission $permission): bool
     {
         return true;
     }
@@ -47,24 +43,24 @@ class BranchPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Branch $branch): bool
+    public function delete(User $user, Permission $permission): bool
     {
-        return true;
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Branch $branch): bool
+    public function restore(User $user, Permission $permission): bool
     {
-        return true;
+        //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Branch $branch): bool
+    public function forceDelete(User $user, Permission $permission): bool
     {
-        return true;
+        //
     }
 }

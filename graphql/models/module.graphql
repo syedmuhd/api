@@ -3,6 +3,7 @@ scalar DateTime
 
 extend type Query @guard {
     modules: [Module] @all
+    module_permission: [ModulePermission] @all
 }
 
 type Module {
@@ -11,4 +12,13 @@ type Module {
     is_active: String!
     created_at: DateTime!
     updated_at: DateTime!
+
+    permissions: [Permission] @hasMany
 }
+
+type ModulePermission {
+    id: Int!
+    module: Module
+    permission: Permission
+}
+

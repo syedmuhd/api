@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Branch;
+use App\Models\Headquarter;
 use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
@@ -17,6 +18,15 @@ class SuperAdministratorSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $headquarter = Headquarter::create([
+            'name' => "Software Hub Sdn. Bhd."
+        ]);
+
+        $branch = new Branch(['name' => 'Shah Alam']);
+
+        $headquarter->branches()->save($branch);
+
         $super = [
             'phone' => '60162731882',
             'email' => 'admin@softwarehub.my',

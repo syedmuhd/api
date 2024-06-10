@@ -46,9 +46,11 @@ class LoginController extends Controller
 
         $user->updateLastLogin();
 
+        $branches = $user->branches;
+
         return $this->responseOk([
             'accessToken' => $token,
-            'userData' => $user->toArray() + ['role' => $user->roles->pluck('name')],
+            'userData' => $user->toArray() + ['role' => $user->roles->pluck('name')] + ['branches' => $branches] + ['totalBranches' => count($branches)],
             'userAbilityRules' => [
                 ["action" => "manage", "subject" => "all"],
             ]

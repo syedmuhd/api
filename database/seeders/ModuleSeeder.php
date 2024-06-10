@@ -17,10 +17,10 @@ class ModuleSeeder extends Seeder
             'Staff',
             'Parent',
             'Student',
-            // 'Attendance',
-            // 'Billing',
-            // 'Report',
-            // 'Event',
+            'Attendance',
+            'Billing',
+            'Report',
+            'Event',
         ];
 
         foreach ($modules as $module) {

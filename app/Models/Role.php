@@ -48,4 +48,9 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class, self::TABLE_RELATIONSHIP_USER_ROLE);
     }
+
+    public function branches(): BelongsToMany
+    {
+        return $this->belongsToMany(Branch::class);
+    }
 }

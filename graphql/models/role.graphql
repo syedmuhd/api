@@ -3,6 +3,33 @@ scalar DateTime
 
 extend type Query @guard {
     roles: [Role] @all
+    rolesByBranch(branch_id: ID! @eq): [Role] @all
+}
+
+extend type Mutation @guard {
+  createRole(input: CreateRoleInput! @spread): Role @create
+}
+
+input CreateRoleInput {
+  branch_id: Int!
+  name: String!
+  permissions: CreatePermissionBelongsToMany
+}
+
+input CreatePermissionBelongsToMany {
+  create: [CreatePermissionInput!]
+  upsert: [UpsertPermissionInput!]
+  connect: [ID!]
+  sync: [ID!]
+}
+
+input CreatePermissionInput {
+  name: String!
+}
+
+input UpsertPermissionInput {
+  id: ID!
+  name: String!
 }
 
 type Role {
@@ -14,4 +41,5 @@ type Role {
     # Relationships
     users: [User] @belongsToMany
     permissions: [Permission] @belongsToMany
+    branches: [Branch] @belongsToMany
 }
