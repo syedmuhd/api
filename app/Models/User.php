@@ -114,9 +114,9 @@ class User extends Authenticatable
     /**
      * Has Many Roles
      */
-    public function roles(): BelongsToMany
+    public function role(): BelongsTo
     {
-        return $this->belongsToMany(Role::class, self::TABLE_RELATIONSHIP_USER_ROLE);
+        return $this->belongsTo(Role::class);
     }
 
     /**

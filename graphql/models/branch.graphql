@@ -2,6 +2,7 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 
 extend type Query @guard {
     branches: [Branch] @all @canModel(ability: "isSuperAdministrator")
+    branchById(id: ID! @eq): Branch @find
 }
 
 extend type Mutation @guard {

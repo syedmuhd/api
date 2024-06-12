@@ -47,7 +47,5 @@ type Role {
     updated_at: DateTime!
 
     # Relationships
-    users: [User] @belongsToMany
-    permissions: [Permission] @belongsToMany
     branches: [Branch] @belongsToMany
 }

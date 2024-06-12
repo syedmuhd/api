@@ -27,9 +27,9 @@ class LoginController extends Controller
 
         // Auth by email
         if (isset($data['email'])) {
-            $user = User::where(['email' => $data['email']])->first();
+            $user = User::with('role')->where(['email' => $data['email']])->first();
         } else if (isset($data['phone'])) {
-            $user = User::where(['phone' => $data['phone']])->first();
+            $user = User::with('role')->where(['phone' => $data['phone']])->first();
         } else {
             response()->json(['errors' => ['message' => 'Unknown error']], Response::HTTP_CONFLICT);
         }
@@ -50,7 +50,7 @@ class LoginController extends Controller
 
         return $this->responseOk([
             'accessToken' => $token,
-            'userData' => $user->toArray() + ['role' => $user->roles->pluck('name')] + ['branches' => $branches] + ['totalBranches' => count($branches)],
+            'userData' => $user->toArray() + ['role' => $user->role->name] + ['branches' => $branches] + ['totalBranches' => count($branches)],
             'userAbilityRules' => [
                 ["action" => "manage", "subject" => "all"],
             ]

@@ -16,8 +16,6 @@ class Role extends Model
     const ROLE_STAFF = "Staff";
     const ROLE_PARENT = "Parent";
     const ROLE_STUDENT = "Student";
-
-    const TABLE_RELATIONSHIP_USER_ROLE = 'user_role';
     const TABLE_RELATIONSHIP_ROLE_PERMISSION = 'role_permission';
 
     protected $fillable = [
@@ -29,7 +27,12 @@ class Role extends Model
      */
     public static function getDefaultRoles()
     {
-        return Role::find([2, 3, 4, 5]);
+        return [
+            self::ROLE_ADMINISTRATOR,
+            self::ROLE_STAFF,
+            self::ROLE_PARENT,
+            self::ROLE_STUDENT
+        ];
     }
 
     /**
@@ -46,7 +49,7 @@ class Role extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, self::TABLE_RELATIONSHIP_USER_ROLE);
+        return $this->belongsToMany(User::class);
     }
 
     public function branches(): BelongsToMany

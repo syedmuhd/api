@@ -35,9 +35,9 @@ class Branch extends Model
     /**
      * Has many Roles
      */
-    public function roles(): BelongsToMany
+    public function roles(): HasMany
     {
-        return $this->belongsToMany(Role::class);
+        return $this->hasMany(Role::class);
     }
 
     /**

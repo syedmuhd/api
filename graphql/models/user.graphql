@@ -2,20 +2,71 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 
 extend type Query @guard {
     me: User @auth
+    userById(id: ID! @eq): User @find
+}
+
+extend type Mutation @guard {
+    createUser(input: CreateUserInput! @spread): User @create
+    updateUser(input: UpdateUserInput! @spread): User @update
+}
+
+input UpdateUserInput {
+  id: ID!
+  email: String
+  phone: String
+  profile: UpdateProfileHasOne
+#   role: CreateRoleBelongsTo
+}
+
+input UpdateProfileHasOne {
+    update: UpdateProfileInput
+}
+
+input UpdateProfileInput {
+    id: ID!
+    name: String!
+}
+
+input CreateUserInput {
+  email: String!
+  phone: String!
+  profile: CreateProfileHasOne!
+  branches: CreateBranchesBelongsToMany!
+  role: CreateRoleBelongsTo!
+}
+
+input CreateRoleBelongsTo {
+    connect: ID!
+}
+
+input CreateBranchesBelongsToMany {
+  connect: [ID!]
+}
+
+input CreateProfileHasOne {
+    create: CreateProfileInput!
+}
+
+input CreateProfileInput {
+    name: String!
+}
+
+input CreatePermissionInput {
+  id: Int!
 }
 
 type User {
     id: Int!
     email: String!
+    phone: String!
     email_verified_at: DateTime
     created_at: DateTime!
     updated_at: DateTime!
 
     # Relationships
-    profile: Profile
+    profile: Profile @hasOne
     headquarter: Headquarter
     branches: [Branch]
     students: [User]
-    roles: [Role]
-    permissions: [Permission]
+    role: Role!
 }
