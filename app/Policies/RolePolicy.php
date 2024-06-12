@@ -8,6 +8,7 @@ use Illuminate\Auth\Access\Response;
 
 class RolePolicy
 {
+
     /**
      * Determine whether the user can view any models.
      */
@@ -18,10 +19,11 @@ class RolePolicy
 
     /**
      * Determine whether the user can view the model.
+     * Check if user belongs to that branch
      */
     public function view(User $user, Role $role): bool
     {
-        //
+        return $user->branches()->pluck("id")->contains($role->branch_id);
     }
 
     /**

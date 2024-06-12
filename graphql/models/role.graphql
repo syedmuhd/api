@@ -3,11 +3,14 @@ scalar DateTime
 
 extend type Query @guard {
     roles: [Role] @all
+    roleById(id: ID! @eq): Role @find @canResolved(ability: "view")
     rolesByBranch(branch_id: ID! @eq): [Role] @all
 }
 
 extend type Mutation @guard {
   createRole(input: CreateRoleInput! @spread): Role @create
+  updateRole(input: UpdateRoleInput! @spread): Role @update
+  deleteRole(id: ID! @eq): Role @delete
 }
 
 input CreateRoleInput {
@@ -18,22 +21,27 @@ input CreateRoleInput {
 
 input CreatePermissionBelongsToMany {
   create: [CreatePermissionInput!]
-  upsert: [UpsertPermissionInput!]
   connect: [ID!]
   sync: [ID!]
 }
 
 input CreatePermissionInput {
-  name: String!
+  id: Int!
 }
 
-input UpsertPermissionInput {
+input UpdateRoleInput {
   id: ID!
-  name: String!
+  name: String
+  permissions: UpdatePermissionBelongsToMany
+}
+
+input UpdatePermissionBelongsToMany {
+  connect: ID
+  sync: [ID]
 }
 
 type Role {
-    id: Int!
+    id: ID!
     name: String!
     created_at: DateTime!
     updated_at: DateTime!

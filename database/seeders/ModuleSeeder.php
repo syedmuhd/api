@@ -18,7 +18,7 @@ class ModuleSeeder extends Seeder
             'Parent',
             'Student',
             'Attendance',
-            'Billing',
+            'Billing & Payment',
             'Report',
             'Event',
         ];
