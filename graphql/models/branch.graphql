@@ -10,7 +10,7 @@ extend type Mutation @guard {
 }
 
 type Branch {
-    id: Int!
+    id: ID!
     name: String!
     is_active: Int!
     created_at: DateTime!

@@ -3,19 +3,28 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 extend type Query @guard {
     me: User @auth
     userById(id: ID! @eq): User @find
+    users(
+    branches: BranchConditionInput @whereHasConditions(columns: ["id"])
+    role_id: ID @where(operator: "=")
+  ): [User] @all
+}
+
+input BranchConditionInput {
+  value: ID!
 }
 
 extend type Mutation @guard {
     createUser(input: CreateUserInput! @spread): User @create
     updateUser(input: UpdateUserInput! @spread): User @update
+    deleteUser(id: ID! @eq): User @delete
 }
 
 input UpdateUserInput {
   id: ID!
+  role_id: ID
   email: String
   phone: String
   profile: UpdateProfileHasOne
-#   role: CreateRoleBelongsTo
 }
 
 input UpdateProfileHasOne {
@@ -23,8 +32,8 @@ input UpdateProfileHasOne {
 }
 
 input UpdateProfileInput {
-    id: ID!
-    name: String!
+    id: ID
+    name: String
 }
 
 input CreateUserInput {
